@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Buku Eksperimen</title>
+  <meta name="description" content="Catatan eksperimen model AI: prompt, skor F1, dan jejaknya dari percobaan ke percobaan.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23f7faf6'/%3E%3Cpath d='M3 24 L11 17 L18 20 L29 7' fill='none' stroke='%231b3fa0' stroke-width='3' stroke-linejoin='round' stroke-linecap='round'/%3E%3Cpath d='M3 12 H29' stroke='%23c22f2f' stroke-width='2' stroke-dasharray='4 3'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/static/css/app.css">
+  <script type="module" src="/static/js/app.js"></script>
+</head>
+<body>
+  <a class="lompat" href="#lembar">Lompat ke isi buku</a>
+  <div class="meja">
+    <nav class="rak" aria-label="Daftar buku">
+      <p class="merek">Buku Eksperimen</p>
+      <ul id="daftar-buku" class="daftar-buku"></ul>
+      <details class="buku-baru" id="buku-baru">
+        <summary>Buat buku baru</summary>
+        <form id="form-buku" novalidate>
+          <label>Nama buku
+            <input name="nama" maxlength="80" required autocomplete="off" placeholder="Modul 3: segmentasi pelanggan">
+          </label>
+          <label>Target F1 (boleh kosong)
+            <input name="target_f1" inputmode="decimal" autocomplete="off" placeholder="0,70">
+          </label>
+          <label>Deskripsi
+            <textarea name="deskripsi" rows="3" maxlength="400" placeholder="Apa yang sedang dicoba, datanya apa."></textarea>
+          </label>
+          <button type="submit" class="tombol">Buat buku</button>
+          <p class="galat" data-galat role="alert"></p>
+        </form>
+      </details>
+    </nav>
+
+    <main class="lembar" id="lembar" tabindex="-1">
+      <div id="kunci" class="kunci" hidden>
+        <form id="form-kunci">
+          <label for="isi-kunci">Penulisan dikunci. Masukkan kunci tulis dari file .env (EDIT_KEY).</label>
+          <div class="baris-kunci">
+            <input id="isi-kunci" type="password" autocomplete="off">
+            <button type="submit" class="tombol">Buka kunci</button>
+          </div>
+        </form>
+      </div>
+      <p id="status" class="status" role="status" aria-live="polite"></p>
+      <div id="isi"></div>
+    </main>
+  </div>
+</body>
+</html>

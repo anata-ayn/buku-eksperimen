@@ -1,0 +1,56 @@
+name: buku-eksperimen
+
+services:
+  app:
+    build: .
+    image: buku-eksperimen:latest
+    restart: unless-stopped
+    ports:
+      - "80:3000"
+    environment:
+      DB_HOST: database
+      DB_PORT: "3306"
+      DB_NAME: ${DB_NAME:?isi DB_NAME di file .env}
+      DB_USER: ${DB_USER:?isi DB_USER di file .env}
+      DB_PASSWORD: ${DB_PASSWORD:?isi DB_PASSWORD di file .env}
+      EDIT_KEY: ${EDIT_KEY:-}
+      RUN_SEED: ${RUN_SEED:-false}
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - frontend
+      - backend
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:3000/healthz', timeout=3)"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  database:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?isi MYSQL_ROOT_PASSWORD di file .env}
+      MYSQL_DATABASE: ${DB_NAME:?isi DB_NAME di file .env}
+      MYSQL_USER: ${DB_USER:?isi DB_USER di file .env}
+      MYSQL_PASSWORD: ${DB_PASSWORD:?isi DB_PASSWORD di file .env}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u root -p\"$${MYSQL_ROOT_PASSWORD}\" --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+networks:
+  frontend:
+  backend:
+    internal: true
+
+volumes:
+  mysql_data:
